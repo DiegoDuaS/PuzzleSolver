@@ -1,0 +1,74 @@
+{
+  "piezas": [
+    {
+      "numero": 1,
+      "existe": true
+    },
+    {
+      "numero": 2,
+      "existe": true
+    }
+  ],
+  "uniones": [
+    {
+      "numero": 101,
+      "tipo": "macho"
+    },
+    {
+      "numero": 102,
+      "tipo": "hembra"
+    },
+    {
+      "numero": 201,
+      "tipo": "hembra"
+    },
+    {
+      "numero": 202,
+      "tipo": "macho"
+    }
+  ],
+  "relaciones": [
+    {
+      "from": "Piece",
+      "from_numero": 1,
+      "to": "Union",
+      "to_numero": 101,
+      "tipo": "TIENE_UNION"
+    },
+    {
+      "from": "Piece",
+      "from_numero": 1,
+      "to": "Union",
+      "to_numero": 102,
+      "tipo": "TIENE_UNION"
+    },
+    {
+      "from": "Piece",
+      "from_numero": 2,
+      "to": "Union",
+      "to_numero": 201,
+      "tipo": "TIENE_UNION"
+    },
+    {
+      "from": "Piece",
+      "from_numero": 2,
+      "to": "Union",
+      "to_numero": 202,
+      "tipo": "TIENE_UNION"
+    },
+    {
+      "from": "Union",
+      "from_numero": 101,
+      "to": "Union",
+      "to_numero": 201,
+      "tipo": "CONECTA_CON"
+    },
+    {
+      "from": "Union",
+      "from_numero": 102,
+      "to": "Union",
+      "to_numero": 202,
+      "tipo": "CONECTA_CON"
+    }
+  ]
+}
