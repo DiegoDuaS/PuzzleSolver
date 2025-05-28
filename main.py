@@ -33,13 +33,13 @@ def obtener_pieza_random(tx, name_puzzle):
     piezas = [record["numero"] for record in result]
     return random.choice(piezas) if piezas else None
 
-def obtener_conexiones(tx, numero_pieza):
+def obtener_conexiones(tx, numero_pieza, name_puzzle):
     result = tx.run("""
         MATCH (p:Piezas {Numero: $numero})
         MATCH (p)-[:TIENE]->(u:Union)-[:CONECTA]->(u2:Union)<-[:TIENE]-(p2:Piezas)
-        WHERE p2.existe = true 
+        WHERE p2.existe = true AND p.nombre_rompecabezas = $name_puzzle
         RETURN DISTINCT p2.Numero AS conectado, u.Numero AS union_origen, u2.Numero AS union_destino
-    """, numero=numero_pieza)
+    """, numero=numero_pieza, name_puzzle=name_puzzle)
     return [
         {
             "pieza": record["conectado"],
@@ -55,7 +55,7 @@ def descomponer_union(codigo_union):
     pieza = codigo_str[1:]                 
     return union, pieza
 
-def main():
+def main(puzzle_name):
     piezas_puestas_completamente = set()
     piezas_puestas_parcialmente = set()
     piezas_por_revisar = []
@@ -65,7 +65,7 @@ def main():
     with driver.session() as session:
         complete = True
         # Elegir pieza inicial
-        pieza_inicial = session.execute_read(obtener_pieza_random, name_puzzle="Puzzle Real")
+        pieza_inicial = session.execute_read(obtener_pieza_random, puzzle_name)
         if not pieza_inicial:
             print("No hay piezas disponibles.")
             return
@@ -82,7 +82,7 @@ def main():
             else:
                 print(f"🧩 Coloca la pieza {pieza_actual} en el tablero")
             
-            conexiones = session.execute_read(obtener_conexiones, pieza_actual)
+            conexiones = session.execute_read(obtener_conexiones, pieza_actual, puzzle_name)
             if not conexiones:
                 print(f"Sin conexiones encontradas para pieza {pieza_actual}")
                 piezas_puestas_parcialmente.discard(pieza_actual)
@@ -137,4 +137,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("Puzzle Real")
