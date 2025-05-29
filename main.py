@@ -85,19 +85,20 @@ def descomponer_union(codigo_union):
     pieza = codigo_str[1:]                 
     return union, pieza
 
-def main(puzzle_name):
+def main(puzzle_name, start):
     piezas_puestas_completamente = set()
     piezas_puestas_parcialmente = set()
     piezas_por_revisar = []
-    piezas_perdidas = []
+    piezas_perdidas = set()
 
     uniones_procesadas = set()
 
     with driver.session() as session:
         complete = True
-        # Elegir pieza inicial
-        pieza_inicial = 7
-        #pieza_inicial = session.execute_read(obtener_pieza_random, puzzle_name)
+        if start == "R":
+            pieza_inicial = session.execute_read(obtener_pieza_random, puzzle_name)
+        else:
+            pieza_inicial = 7
         if not pieza_inicial:
             print("No hay piezas disponibles.")
             return
@@ -141,7 +142,7 @@ def main(puzzle_name):
                     #En caso de que la pieza destino esta perdida
                     if not existe_destino:
                         if pieza_destino not in piezas_perdidas:
-                            piezas_perdidas.append(pieza_destino)
+                            piezas_perdidas.add(pieza_destino)
                         print(f"   ↳ Se conectaría a pieza {pieza_destino}, pero está perdida (unión {union_origen} de pieza {pieza_origen} deberia de quedarse vacia)")
                         nuevas_conexiones = True
                         complete = False
@@ -214,4 +215,6 @@ def main(puzzle_name):
 
 
 if __name__ == "__main__":
-    main("Puzzle Cohete")
+    puzzle = input("Ingrese el rompecabezas a resolver: ")
+    start = input("Ingrese la pieza de inicio (Si desea random, escriba R): ")
+    main(puzzle, start)
