@@ -98,7 +98,7 @@ def main(puzzle_name, start):
         if start == "R":
             pieza_inicial = session.execute_read(obtener_pieza_random, puzzle_name)
         else:
-            pieza_inicial = 7
+            pieza_inicial = int(start)
         if not pieza_inicial:
             print("No hay piezas disponibles.")
             return
